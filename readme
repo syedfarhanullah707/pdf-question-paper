@@ -1,0 +1,56 @@
+# 📝 PDF to Question Paper Generator
+
+Upload a PDF (notes, a chapter, a book) and get an exam-style question paper with
+**MCQs, short questions and long questions**, plus an answer key.
+
+**Stack:** Streamlit (UI) · Google Gemini `gemini-3.8-flash` (AI) · pypdf (PDF reading) · python-docx and reportlab (exports)
+
+## Features
+- Choose how many MCQs, short and long questions, and the marks for each
+- Difficulty (Easy / Medium / Hard / Mixed) and optional topic focus
+- Exam-style on-screen paper with school name, subject, time and total marks
+- Download the paper and the answer key as **PDF** or **Word (.docx)**
+- Answers can be shown or hidden on screen
+- Scanned PDFs (no extractable text) are sent to Gemini directly
+- Malformed AI output is filtered out, and you are warned if fewer questions than requested were produced
+
+## Run locally
+```bash
+git clone https://github.com/<your-username>/<your-repo>.git
+cd <your-repo>
+python -m venv .venv && source .venv/bin/activate   # Windows: .venv\Scripts\activate
+pip install -r requirements.txt
+```
+
+Get a free API key at https://aistudio.google.com/apikey (it must be a **Google Gemini** key), then either:
+
+- paste it into the app sidebar, **or**
+- set an environment variable: `export GEMINI_API_KEY="your-key"` (Windows: `set GEMINI_API_KEY=your-key`), **or**
+- create `.streamlit/secrets.toml` (never commit this file):
+  ```toml
+  GEMINI_API_KEY = "your-key"
+  ```
+
+```bash
+streamlit run app.py
+```
+
+## Configuration
+| Name | Purpose | Default |
+|---|---|---|
+| `GEMINI_API_KEY` | Gemini API key | none (sidebar prompt) |
+| `GEMINI_MODEL` | Model to use | `gemini-3.8-flash` |
+
+## Deploy on Streamlit Community Cloud
+1. Push the files to a GitHub repo. `app.py`, `requirements.txt` and `README.md` must be in the **top level** with exactly these names.
+2. Go to https://share.streamlit.io and sign in with GitHub.
+3. Click **Create app**, choose the repo, branch `main`, main file `app.py`.
+4. Open **Advanced settings → Secrets** and add: `GEMINI_API_KEY = "your-key"`
+5. Click **Deploy**.
+
+## Limitations
+- Questions are AI-generated and can contain mistakes. Always review the paper and answer key.
+- The PDF export uses built-in fonts, so it supports Latin-script text only. For Urdu, Arabic or other scripts, use the Word export.
+- Maximum upload size is 10 MB.
+- The PDF is sent to the Gemini API; check Google's data policy before uploading sensitive material.
+- Gemini 3.8 Flash has introductory pricing until 31 Dec 2026; check the pricing page.
